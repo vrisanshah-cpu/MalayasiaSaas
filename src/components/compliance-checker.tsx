@@ -58,6 +58,21 @@ export function ComplianceChecker() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<ComplianceResult | null>(null);
 
+  // The reasons/rewrites inside `result` are only ever in the language that
+  // was selected at submit time — switching the language dropdown alone
+  // doesn't retranslate a result already on screen. Rather than leave a
+  // stale-language result sitting under freshly-translated UI chrome (which
+  // reads as broken translation), clear it so the user re-submits and gets
+  // a result in the language they're now looking at. This is React's
+  // "adjust state during render" pattern rather than an effect, so the
+  // reset happens before paint with no stale-content flash.
+  const [resultLocale, setResultLocale] = useState(locale);
+  if (locale !== resultLocale) {
+    setResultLocale(locale);
+    setResult(null);
+    setError(null);
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!adCopy.trim() || loading) return;

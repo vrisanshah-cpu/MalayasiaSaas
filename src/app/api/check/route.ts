@@ -114,7 +114,7 @@ export async function POST(request: Request) {
           role: "user",
           parts: [
             {
-              text: `Category: ${categoryLabel} (category_id: "${category}")\n\nWrite the "reason" fields and "safe_rewrite_suggestions" in ${responseLanguage}. Keep each "phrase" in the exact original wording/language it appears in below (do not translate the quoted phrase itself). Keep "regulation_reference" as-is from the rules block.\n\nAd copy to review:\n"""\n${adCopy}\n"""`,
+              text: `Category: ${categoryLabel} (category_id: "${category}")\n\nRESPONSE LANGUAGE (mandatory): write every "reason" string and every "safe_rewrite_suggestions" entry entirely in ${responseLanguage}. This applies even if the ad copy below is in a different language. Do not fall back to English unless ${responseLanguage} is English. Two exceptions only: keep each "phrase" in the exact original wording/language it appears in below (do not translate the quoted phrase itself), and keep "regulation_reference" as-is from the rules block.\n\nAd copy to review:\n"""\n${adCopy}\n"""\n\nReminder: "reason" and "safe_rewrite_suggestions" must be in ${responseLanguage}, not English.`,
             },
           ],
         },
