@@ -9,19 +9,36 @@ import { complianceResultSchema } from "@/lib/compliance-schema";
 
 const MAX_AD_COPY_LENGTH = 4000;
 
+const RESPONSE_LANGUAGES: Record<string, string> = {
+  en: "English",
+  ms: "Bahasa Melayu",
+  zh: "Simplified Chinese",
+  ta: "Tamil",
+};
+
 const requestSchema = z.object({
-  adCopy: z
+  adCopy: z.string().trim().min(1).max(MAX_AD_COPY_LENGTH),
+  category: z.string().refine(isCategoryId),
+  locale: z
     .string()
-    .trim()
-    .min(1, "Ad copy is required.")
-    .max(
-      MAX_AD_COPY_LENGTH,
-      `Ad copy must be ${MAX_AD_COPY_LENGTH} characters or fewer.`
-    ),
-  category: z
-    .string()
-    .refine(isCategoryId, { message: "Unknown category." }),
+    .refine((v) => v in RESPONSE_LANGUAGES)
+    .default("en"),
 });
+
+// Stable machine-readable codes so the client can render a translated
+// message in the user's selected UI language rather than an English-only
+// string baked into the API response. See src/lib/i18n/*.ts errors keys.
+type ErrorCode =
+  | "invalid_request"
+  | "missing_api_key"
+  | "empty_response"
+  | "malformed_response"
+  | "invalid_shape"
+  | "check_failed";
+
+function errorResponse(code: ErrorCode, status: number) {
+  return NextResponse.json({ errorCode: code }, { status });
+}
 
 // The response schema Gemini is constrained to. Kept in lockstep with
 // complianceResultSchema (Zod) below, which re-validates the parsed JSON as
@@ -55,29 +72,24 @@ export async function POST(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+    return errorResponse("invalid_request", 400);
   }
 
   const parsedRequest = requestSchema.safeParse(body);
   if (!parsedRequest.success) {
-    return NextResponse.json(
-      { error: parsedRequest.error.issues[0]?.message ?? "Invalid request." },
-      { status: 400 }
-    );
+    return errorResponse("invalid_request", 400);
   }
-  const { adCopy, category } = parsedRequest.data;
+  const { adCopy, category, locale } = parsedRequest.data;
   const categoryLabel =
     CATEGORIES.find((c) => c.id === category)?.label ?? category;
+  const responseLanguage = RESPONSE_LANGUAGES[locale];
 
   let ai;
   try {
     ai = getGeminiClient();
   } catch (err) {
     console.error(err);
-    return NextResponse.json(
-      { error: "Server is not configured with a Gemini API key." },
-      { status: 500 }
-    );
+    return errorResponse("missing_api_key", 500);
   }
 
   try {
@@ -102,7 +114,7 @@ export async function POST(request: Request) {
           role: "user",
           parts: [
             {
-              text: `Category: ${categoryLabel} (category_id: "${category}")\n\nAd copy to review:\n"""\n${adCopy}\n"""`,
+              text: `Category: ${categoryLabel} (category_id: "${category}")\n\nWrite the "reason" fields and "safe_rewrite_suggestions" in ${responseLanguage}. Keep each "phrase" in the exact original wording/language it appears in below (do not translate the quoted phrase itself). Keep "regulation_reference" as-is from the rules block.\n\nAd copy to review:\n"""\n${adCopy}\n"""`,
             },
           ],
         },
@@ -111,10 +123,7 @@ export async function POST(request: Request) {
 
     const rawText = response.text;
     if (!rawText) {
-      return NextResponse.json(
-        { error: "The model returned an empty response. Please try again." },
-        { status: 502 }
-      );
+      return errorResponse("empty_response", 502);
     }
 
     let parsedJson: unknown;
@@ -122,27 +131,18 @@ export async function POST(request: Request) {
       parsedJson = JSON.parse(rawText);
     } catch {
       console.error("Gemini returned non-JSON output:", rawText);
-      return NextResponse.json(
-        { error: "The model returned a malformed response. Please try again." },
-        { status: 502 }
-      );
+      return errorResponse("malformed_response", 502);
     }
 
     const result = complianceResultSchema.safeParse(parsedJson);
     if (!result.success) {
       console.error("Gemini output failed schema validation:", result.error);
-      return NextResponse.json(
-        { error: "The model returned a response in an unexpected shape. Please try again." },
-        { status: 502 }
-      );
+      return errorResponse("invalid_shape", 502);
     }
 
     return NextResponse.json(result.data);
   } catch (err) {
     console.error(err);
-    return NextResponse.json(
-      { error: "The compliance check failed. Please try again." },
-      { status: 502 }
-    );
+    return errorResponse("check_failed", 502);
   }
 }

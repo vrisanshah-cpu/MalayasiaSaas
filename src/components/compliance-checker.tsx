@@ -17,37 +17,41 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 import { CATEGORIES, type CategoryId } from "@/lib/regulatory-rules";
 import type { ComplianceResult } from "@/lib/compliance-schema";
 import { highlightPhrases } from "@/lib/highlight";
 import { cn } from "@/lib/utils";
+import { useLocale } from "@/lib/i18n/locale-context";
+import type { Messages } from "@/lib/i18n/types";
 
 const MAX_AD_COPY_LENGTH = 4000;
 
-function scoreVisual(score: number) {
+function scoreVisual(score: number, t: Messages) {
   if (score >= 80) {
     return {
-      label: "Low concern",
+      label: t.scoreLow,
       className: "text-emerald-600 dark:text-emerald-400",
       badgeVariant: "secondary" as const,
     };
   }
   if (score >= 50) {
     return {
-      label: "Needs review",
+      label: t.scoreMedium,
       className: "text-amber-600 dark:text-amber-400",
       badgeVariant: "secondary" as const,
     };
   }
   return {
-    label: "High risk",
+    label: t.scoreHigh,
     className: "text-red-600 dark:text-red-400",
     badgeVariant: "destructive" as const,
   };
 }
 
 export function ComplianceChecker() {
+  const { locale, t } = useLocale();
   const [adCopy, setAdCopy] = useState("");
   const [category, setCategory] = useState<CategoryId>(CATEGORIES[0].id);
   const [loading, setLoading] = useState(false);
@@ -66,15 +70,16 @@ export function ComplianceChecker() {
       const res = await fetch("/api/check", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ adCopy, category }),
+        body: JSON.stringify({ adCopy, category, locale }),
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error ?? "Something went wrong.");
+        const code = (data.errorCode as keyof Messages["errors"]) ?? "checkFailed";
+        throw new Error(t.errors[code] ?? t.errors.checkFailed);
       }
       setResult(data as ComplianceResult);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong.");
+      setError(err instanceof Error ? err.message : t.errors.checkFailed);
     } finally {
       setLoading(false);
     }
@@ -87,23 +92,22 @@ export function ComplianceChecker() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  const visual = result ? scoreVisual(result.score) : null;
+  const visual = result ? scoreVisual(result.score, t) : null;
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-10">
-      <header className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold tracking-tight">AdCheck MY</h1>
-        <p className="text-muted-foreground text-sm">
-          Screen ad copy for likely Malaysian advertising compliance issues
-          before you publish — F&amp;B, cosmetics, and health supplement
-          claim rules.
-        </p>
+      <header className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-2xl font-semibold tracking-tight">AdCheck MY</h1>
+          <p className="text-muted-foreground text-sm">{t.tagline}</p>
+        </div>
+        <LanguageSwitcher />
       </header>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium" htmlFor="category">
-            Category
+            {t.categoryLabel}
           </label>
           <Select
             value={category}
@@ -112,14 +116,14 @@ export function ComplianceChecker() {
             <SelectTrigger id="category" className="w-full sm:w-64">
               <SelectValue>
                 {(value: CategoryId) =>
-                  CATEGORIES.find((c) => c.id === value)?.label ?? value
+                  t.categories[value as keyof Messages["categories"]]
                 }
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {CATEGORIES.map((c) => (
                 <SelectItem key={c.id} value={c.id}>
-                  {c.label}
+                  {t.categories[c.id as keyof Messages["categories"]]}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -128,13 +132,13 @@ export function ComplianceChecker() {
 
         <div className="flex flex-col gap-2">
           <label className="text-sm font-medium" htmlFor="ad-copy">
-            Ad copy
+            {t.adCopyLabel}
           </label>
           <Textarea
             id="ad-copy"
             value={adCopy}
             onChange={(e) => setAdCopy(e.target.value.slice(0, MAX_AD_COPY_LENGTH))}
-            placeholder="Paste your caption, product description, or ad copy here — English, Bahasa Melayu, or Manglish all work."
+            placeholder={t.adCopyPlaceholder}
             rows={8}
             maxLength={MAX_AD_COPY_LENGTH}
           />
@@ -146,11 +150,11 @@ export function ComplianceChecker() {
         <Button type="submit" disabled={loading || !adCopy.trim()} className="w-fit">
           {loading ? (
             <>
-              <Loader2 className="animate-spin" /> Checking...
+              <Loader2 className="animate-spin" /> {t.checking}
             </>
           ) : (
             <>
-              <Sparkles /> Check compliance
+              <Sparkles /> {t.submitButton}
             </>
           )}
         </Button>
@@ -159,7 +163,7 @@ export function ComplianceChecker() {
       {error && (
         <Alert variant="destructive">
           <AlertTriangle />
-          <AlertTitle>Check failed</AlertTitle>
+          <AlertTitle>{t.checkFailedTitle}</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
@@ -168,19 +172,14 @@ export function ComplianceChecker() {
         <div className="flex flex-col gap-4">
           <Alert>
             <AlertTriangle />
-            <AlertTitle>Advisory tool — not a substitute for legal or regulatory review</AlertTitle>
-            <AlertDescription>
-              This score and these flags are guidance only. Ambiguous claims
-              are called out with lower confidence rather than a false
-              guarantee — always confirm borderline claims with qualified
-              regulatory or legal counsel before publishing.
-            </AlertDescription>
+            <AlertTitle>{t.advisoryTitle}</AlertTitle>
+            <AlertDescription>{t.advisoryBody}</AlertDescription>
           </Alert>
 
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
-                <span>Compliance score</span>
+                <span>{t.scoreCardTitle}</span>
                 <Badge variant={visual.badgeVariant}>{visual.label}</Badge>
               </CardTitle>
             </CardHeader>
@@ -194,7 +193,7 @@ export function ComplianceChecker() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Your ad copy</CardTitle>
+              <CardTitle>{t.yourAdCopyTitle}</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="leading-relaxed whitespace-pre-wrap">
@@ -226,7 +225,7 @@ export function ComplianceChecker() {
           {result.flagged_phrases.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle>Flagged phrases ({result.flagged_phrases.length})</CardTitle>
+                <CardTitle>{t.flaggedPhrasesTitle(result.flagged_phrases.length)}</CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
                 {result.flagged_phrases.map((flag, i) => (
@@ -246,7 +245,7 @@ export function ComplianceChecker() {
           {result.safe_rewrite_suggestions.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle>Safe rewrite suggestions</CardTitle>
+                <CardTitle>{t.safeRewriteTitle}</CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
                 {result.safe_rewrite_suggestions.map((suggestion, i) => (
@@ -259,7 +258,7 @@ export function ComplianceChecker() {
                       className="w-fit"
                       onClick={() => applyRewrite(suggestion)}
                     >
-                      Use this rewrite
+                      {t.useThisRewrite}
                     </Button>
                   </div>
                 ))}
