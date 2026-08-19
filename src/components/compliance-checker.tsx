@@ -1,7 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { AlertTriangle, Loader2, Sparkles } from "lucide-react";
+import {
+  AlertTriangle,
+  FileText,
+  Flag,
+  Loader2,
+  ShieldCheck,
+  Sparkles,
+  Wand2,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -32,22 +40,62 @@ function scoreVisual(score: number, t: Messages) {
   if (score >= 80) {
     return {
       label: t.scoreLow,
-      className: "text-emerald-600 dark:text-emerald-400",
+      ring: "text-emerald-500",
+      chip: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
       badgeVariant: "secondary" as const,
     };
   }
   if (score >= 50) {
     return {
       label: t.scoreMedium,
-      className: "text-amber-600 dark:text-amber-400",
+      ring: "text-amber-500",
+      chip: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
       badgeVariant: "secondary" as const,
     };
   }
   return {
     label: t.scoreHigh,
-    className: "text-red-600 dark:text-red-400",
+    ring: "text-red-500",
+    chip: "bg-red-500/10 text-red-600 dark:text-red-400",
     badgeVariant: "destructive" as const,
   };
+}
+
+function ScoreRing({ score, ringClassName }: { score: number; ringClassName: string }) {
+  const radius = 42;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference * (1 - score / 100);
+
+  return (
+    <div className="relative flex size-28 shrink-0 items-center justify-center">
+      <svg viewBox="0 0 100 100" className="size-28 -rotate-90">
+        <circle
+          cx="50"
+          cy="50"
+          r={radius}
+          fill="none"
+          strokeWidth="8"
+          className="stroke-muted"
+        />
+        <circle
+          cx="50"
+          cy="50"
+          r={radius}
+          fill="none"
+          strokeWidth="8"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          className={cn("transition-all duration-700 ease-out", ringClassName)}
+          stroke="currentColor"
+        />
+      </svg>
+      <div className="absolute flex flex-col items-center">
+        <span className="text-3xl font-bold tabular-nums">{score}</span>
+        <span className="text-muted-foreground text-[11px]">/100</span>
+      </div>
+    </div>
+  );
 }
 
 export function ComplianceChecker() {
@@ -110,73 +158,86 @@ export function ComplianceChecker() {
   const visual = result ? scoreVisual(result.score, t) : null;
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-10">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 py-12">
       <header className="flex items-start justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-semibold tracking-tight">AdCheck MY</h1>
-          <p className="text-muted-foreground text-sm">{t.tagline}</p>
+        <div className="flex items-start gap-3">
+          <div className="bg-primary text-primary-foreground flex size-10 shrink-0 items-center justify-center rounded-xl shadow-sm">
+            <ShieldCheck className="size-5" />
+          </div>
+          <div className="flex flex-col gap-1">
+            <h1 className="text-2xl font-semibold tracking-tight">AdCheck MY</h1>
+            <p className="text-muted-foreground max-w-md text-sm">{t.tagline}</p>
+          </div>
         </div>
         <LanguageSwitcher />
       </header>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium" htmlFor="category">
-            {t.categoryLabel}
-          </label>
-          <Select
-            value={category}
-            onValueChange={(value) => setCategory(value as CategoryId)}
-          >
-            <SelectTrigger id="category" className="w-full sm:w-64">
-              <SelectValue>
-                {(value: CategoryId) =>
-                  t.categories[value as keyof Messages["categories"]]
-                }
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {CATEGORIES.map((c) => (
-                <SelectItem key={c.id} value={c.id}>
-                  {t.categories[c.id as keyof Messages["categories"]]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium" htmlFor="ad-copy">
-            {t.adCopyLabel}
-          </label>
-          <Textarea
-            id="ad-copy"
-            value={adCopy}
-            onChange={(e) => setAdCopy(e.target.value.slice(0, MAX_AD_COPY_LENGTH))}
-            placeholder={t.adCopyPlaceholder}
-            rows={8}
-            maxLength={MAX_AD_COPY_LENGTH}
-          />
-          <div className="text-muted-foreground text-right text-xs">
-            {adCopy.length} / {MAX_AD_COPY_LENGTH}
+      <Card className="border-border/60 gap-5 rounded-2xl py-5 shadow-sm">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5 px-5">
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium" htmlFor="category">
+              {t.categoryLabel}
+            </label>
+            <Select
+              value={category}
+              onValueChange={(value) => setCategory(value as CategoryId)}
+            >
+              <SelectTrigger id="category" className="w-full sm:w-64">
+                <SelectValue>
+                  {(value: CategoryId) =>
+                    t.categories[value as keyof Messages["categories"]]
+                  }
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {CATEGORIES.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    {t.categories[c.id as keyof Messages["categories"]]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-        </div>
 
-        <Button type="submit" disabled={loading || !adCopy.trim()} className="w-fit">
-          {loading ? (
-            <>
-              <Loader2 className="animate-spin" /> {t.checking}
-            </>
-          ) : (
-            <>
-              <Sparkles /> {t.submitButton}
-            </>
-          )}
-        </Button>
-      </form>
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium" htmlFor="ad-copy">
+              {t.adCopyLabel}
+            </label>
+            <Textarea
+              id="ad-copy"
+              value={adCopy}
+              onChange={(e) => setAdCopy(e.target.value.slice(0, MAX_AD_COPY_LENGTH))}
+              placeholder={t.adCopyPlaceholder}
+              rows={8}
+              maxLength={MAX_AD_COPY_LENGTH}
+              className="resize-none"
+            />
+            <div className="text-muted-foreground text-right text-xs tabular-nums">
+              {adCopy.length} / {MAX_AD_COPY_LENGTH}
+            </div>
+          </div>
+
+          <Button
+            type="submit"
+            disabled={loading || !adCopy.trim()}
+            className="w-fit shadow-sm"
+            size="lg"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin" /> {t.checking}
+              </>
+            ) : (
+              <>
+                <Sparkles /> {t.submitButton}
+              </>
+            )}
+          </Button>
+        </form>
+      </Card>
 
       {error && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="rounded-2xl">
           <AlertTriangle />
           <AlertTitle>{t.checkFailedTitle}</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
@@ -184,31 +245,36 @@ export function ComplianceChecker() {
       )}
 
       {result && visual && (
-        <div className="flex flex-col gap-4">
-          <Alert>
+        <div className="flex flex-col gap-5">
+          <Alert className="rounded-2xl">
             <AlertTriangle />
             <AlertTitle>{t.advisoryTitle}</AlertTitle>
             <AlertDescription>{t.advisoryBody}</AlertDescription>
           </Alert>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <span>{t.scoreCardTitle}</span>
-                <Badge variant={visual.badgeVariant}>{visual.label}</Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className={cn("text-5xl font-bold", visual.className)}>
-                {result.score}
-                <span className="text-muted-foreground text-xl font-normal">/100</span>
+          <Card className="rounded-2xl shadow-sm">
+            <CardContent className="flex items-center gap-5">
+              <ScoreRing score={result.score} ringClassName={visual.ring} />
+              <div className="flex flex-col gap-2">
+                <span className="text-muted-foreground text-sm font-medium">
+                  {t.scoreCardTitle}
+                </span>
+                <Badge
+                  variant={visual.badgeVariant}
+                  className={cn("w-fit", visual.badgeVariant === "secondary" && visual.chip)}
+                >
+                  {visual.label}
+                </Badge>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="rounded-2xl shadow-sm">
             <CardHeader>
-              <CardTitle>{t.yourAdCopyTitle}</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <FileText className="text-muted-foreground size-4" />
+                {t.yourAdCopyTitle}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="leading-relaxed whitespace-pre-wrap">
@@ -219,7 +285,7 @@ export function ComplianceChecker() {
                     <Tooltip key={i}>
                       <TooltipTrigger
                         render={
-                          <mark className="bg-red-200 dark:bg-red-900/60 rounded px-0.5 cursor-help">
+                          <mark className="bg-red-200 dark:bg-red-900/60 cursor-help rounded px-0.5">
                             {seg.text}
                           </mark>
                         }
@@ -238,9 +304,12 @@ export function ComplianceChecker() {
           </Card>
 
           {result.flagged_phrases.length > 0 && (
-            <Card>
+            <Card className="rounded-2xl shadow-sm">
               <CardHeader>
-                <CardTitle>{t.flaggedPhrasesTitle(result.flagged_phrases.length)}</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Flag className="text-muted-foreground size-4" />
+                  {t.flaggedPhrasesTitle(result.flagged_phrases.length)}
+                </CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
                 {result.flagged_phrases.map((flag, i) => (
@@ -258,13 +327,19 @@ export function ComplianceChecker() {
           )}
 
           {result.safe_rewrite_suggestions.length > 0 && (
-            <Card>
+            <Card className="rounded-2xl shadow-sm">
               <CardHeader>
-                <CardTitle>{t.safeRewriteTitle}</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Wand2 className="text-muted-foreground size-4" />
+                  {t.safeRewriteTitle}
+                </CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
                 {result.safe_rewrite_suggestions.map((suggestion, i) => (
-                  <div key={i} className="flex flex-col gap-2 rounded-lg border p-3">
+                  <div
+                    key={i}
+                    className="bg-secondary/40 flex flex-col gap-2 rounded-xl border p-3"
+                  >
                     <p className="whitespace-pre-wrap text-sm">{suggestion}</p>
                     <Button
                       type="button"
