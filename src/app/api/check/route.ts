@@ -6,8 +6,15 @@ import { getGeminiClient, GEMINI_MODEL } from "@/lib/gemini";
 import { COMPLIANCE_SYSTEM_INSTRUCTION } from "@/lib/compliance-prompt";
 import { CATEGORIES, isCategoryId } from "@/lib/regulatory-rules";
 import { complianceResultSchema } from "@/lib/compliance-schema";
+import { getCurrentAccount } from "@/lib/accounts";
+import { createClient } from "@/lib/supabase/server";
 
 const MAX_AD_COPY_LENGTH = 4000;
+
+// Free-tier monthly check cap per account (shared across team members).
+// Only enforced for signed-in users - anonymous checks (no account) stay
+// unmetered since they're never saved to history in the first place.
+const FREE_TIER_MONTHLY_LIMIT = Number(process.env.FREE_TIER_MONTHLY_LIMIT ?? 20);
 
 const RESPONSE_LANGUAGES: Record<string, string> = {
   en: "English",
@@ -34,7 +41,8 @@ type ErrorCode =
   | "empty_response"
   | "malformed_response"
   | "invalid_shape"
-  | "check_failed";
+  | "check_failed"
+  | "quota_exceeded";
 
 function errorResponse(code: ErrorCode, status: number) {
   return NextResponse.json({ errorCode: code }, { status });
@@ -92,6 +100,28 @@ export async function POST(request: Request) {
     return errorResponse("missing_api_key", 500);
   }
 
+  // Signed-in users get their check saved to account history; anonymous
+  // users can still use the checker (Phase 1 behavior preserved), it's
+  // just never persisted. account is null when signed out.
+  const account = await getCurrentAccount();
+
+  if (account && account.tier === "free") {
+    const supabase = await createClient();
+    const startOfMonth = new Date();
+    startOfMonth.setUTCDate(1);
+    startOfMonth.setUTCHours(0, 0, 0, 0);
+
+    const { count } = await supabase
+      .from("checks")
+      .select("id", { count: "exact", head: true })
+      .eq("account_id", account.accountId)
+      .gte("created_at", startOfMonth.toISOString());
+
+    if ((count ?? 0) >= FREE_TIER_MONTHLY_LIMIT) {
+      return errorResponse("quota_exceeded", 402);
+    }
+  }
+
   try {
     // systemInstruction is COMPLIANCE_SYSTEM_INSTRUCTION unmodified on every
     // call (see that file for why) — this is the piece Gemini's implicit
@@ -138,6 +168,25 @@ export async function POST(request: Request) {
     if (!result.success) {
       console.error("Gemini output failed schema validation:", result.error);
       return errorResponse("invalid_shape", 502);
+    }
+
+    if (account) {
+      const supabase = await createClient();
+      const { error: insertError } = await supabase.from("checks").insert({
+        account_id: account.accountId,
+        user_id: account.userId,
+        category,
+        locale,
+        ad_copy: adCopy,
+        score: result.data.score,
+        flagged_phrases: result.data.flagged_phrases,
+        safe_rewrite_suggestions: result.data.safe_rewrite_suggestions,
+      });
+      if (insertError) {
+        // Don't fail the request over a history-save error - the user
+        // still gets their result, it just won't show up in the dashboard.
+        console.error("Failed to save check to history:", insertError);
+      }
     }
 
     return NextResponse.json(result.data);

@@ -1,15 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  AlertTriangle,
-  FileText,
-  Flag,
-  Loader2,
-  ShieldCheck,
-  Sparkles,
-  Wand2,
-} from "lucide-react";
+import { AlertTriangle, FileText, Flag, Loader2, Sparkles, Wand2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -25,7 +17,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { LanguageSwitcher } from "@/components/language-switcher";
 
 import { CATEGORIES, type CategoryId } from "@/lib/regulatory-rules";
 import type { ComplianceResult } from "@/lib/compliance-schema";
@@ -137,6 +128,9 @@ export function ComplianceChecker() {
       });
       const data = await res.json();
       if (!res.ok) {
+        if (data.errorCode === "quota_exceeded") {
+          throw new Error(t.billing.quotaExceeded);
+        }
         const code = (data.errorCode as keyof Messages["errors"]) ?? "checkFailed";
         throw new Error(t.errors[code] ?? t.errors.checkFailed);
       }
@@ -158,20 +152,7 @@ export function ComplianceChecker() {
   const visual = result ? scoreVisual(result.score, t) : null;
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 py-12">
-      <header className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-3">
-          <div className="bg-primary text-primary-foreground flex size-10 shrink-0 items-center justify-center rounded-xl shadow-sm">
-            <ShieldCheck className="size-5" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <h1 className="text-2xl font-semibold tracking-tight">AdCheck MY</h1>
-            <p className="text-muted-foreground max-w-md text-sm">{t.tagline}</p>
-          </div>
-        </div>
-        <LanguageSwitcher />
-      </header>
-
+    <>
       <Card className="border-border/60 gap-5 rounded-2xl py-5 shadow-sm">
         <form onSubmit={handleSubmit} className="flex flex-col gap-5 px-5">
           <div className="flex flex-col gap-2">
@@ -357,6 +338,6 @@ export function ComplianceChecker() {
           )}
         </div>
       )}
-    </div>
+    </>
   );
 }

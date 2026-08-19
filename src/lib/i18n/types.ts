@@ -42,4 +42,54 @@ export interface Messages {
     health_supplements: string;
   };
   languageLabel: string;
+  nav: {
+    dashboard: string;
+    signIn: string;
+    signOut: string;
+  };
+  auth: {
+    title: string;
+    emailLabel: string;
+    emailPlaceholder: string;
+    sendLink: string;
+    sending: string;
+    checkEmail: string;
+    errorGeneric: string;
+  };
+  dashboard: {
+    title: string;
+    empty: string;
+    filterCategory: string;
+    filterAllCategories: string;
+    columnDate: string;
+    columnCategory: string;
+    columnScore: string;
+    columnAdCopy: string;
+    team: string;
+    billing: string;
+  };
+  team: {
+    title: string;
+    roleOwner: string;
+    roleMember: string;
+    inviteEmailPlaceholder: string;
+    inviteButton: string;
+    inviting: string;
+    inviteSuccess: string;
+    inviteErrorGeneric: string;
+    membersTitle: string;
+    ownerOnlyNotice: string;
+  };
+  billing: {
+    title: string;
+    currentPlan: string;
+    freePlan: string;
+    proPlan: string;
+    freeDescription: (limit: number) => string;
+    proDescription: string;
+    upgradeButton: string;
+    manageButton: string;
+    upgrading: string;
+    quotaExceeded: string;
+  };
 }
