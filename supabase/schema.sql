@@ -6,6 +6,10 @@
 -- (account_members, owner|member roles) and owns a history of compliance
 -- checks (checks). Billing tier lives on the account, not the individual
 -- user, since a subscription covers the whole team (Phase 3/4).
+--
+-- Tables are all created first, then RLS policies (which reference each
+-- other across tables) are added afterward - policies can't reference a
+-- table that doesn't exist yet.
 
 -- ── accounts ────────────────────────────────────────────────────────────
 create table if not exists public.accounts (
@@ -17,18 +21,6 @@ create table if not exists public.accounts (
   created_at timestamptz not null default now()
 );
 
-alter table public.accounts enable row level security;
-
-drop policy if exists "members can view their account" on public.accounts;
-create policy "members can view their account" on public.accounts
-  for select using (
-    id in (select account_id from public.account_members where user_id = auth.uid())
-  );
-
--- Updates to tier/stripe_* fields happen only via the billing webhook route,
--- which uses the service role key and therefore bypasses RLS entirely -
--- intentionally no client-facing update policy here.
-
 -- ── account_members ────────────────────────────────────────────────────
 create table if not exists public.account_members (
   account_id uuid not null references public.accounts (id) on delete cascade,
@@ -38,17 +30,6 @@ create table if not exists public.account_members (
   created_at timestamptz not null default now(),
   primary key (account_id, user_id)
 );
-
-alter table public.account_members enable row level security;
-
-drop policy if exists "members can view their account roster" on public.account_members;
-create policy "members can view their account roster" on public.account_members
-  for select using (
-    account_id in (select account_id from public.account_members where user_id = auth.uid())
-  );
-
--- Invites (inserts) happen via /api/team/invite using the service role key,
--- not directly from the client - no client-facing insert policy here.
 
 -- ── checks ──────────────────────────────────────────────────────────────
 create table if not exists public.checks (
@@ -67,21 +48,53 @@ create table if not exists public.checks (
 create index if not exists checks_account_id_created_at_idx
   on public.checks (account_id, created_at desc);
 
+-- ── row level security ──────────────────────────────────────────────────
+alter table public.accounts enable row level security;
+alter table public.account_members enable row level security;
 alter table public.checks enable row level security;
+
+-- A policy on account_members can't subquery account_members directly -
+-- Postgres re-applies the same policy to that subquery, recursing forever
+-- ("infinite recursion detected in policy for relation account_members").
+-- This SECURITY DEFINER function does the membership lookup with RLS
+-- bypassed (definer's privileges, not the caller's), so policies can call
+-- it safely instead of subquerying the table directly.
+create or replace function public.is_account_member(target_account_id uuid)
+returns boolean
+language sql
+security definer
+set search_path = public
+stable
+as $$
+  select exists (
+    select 1 from public.account_members
+    where account_id = target_account_id and user_id = auth.uid()
+  );
+$$;
+
+drop policy if exists "members can view their account" on public.accounts;
+create policy "members can view their account" on public.accounts
+  for select using (public.is_account_member(id));
+-- Updates to tier/stripe_* fields happen only via the billing webhook route,
+-- which uses the service role key and therefore bypasses RLS entirely -
+-- intentionally no client-facing update policy here.
+
+drop policy if exists "members can view their account roster" on public.account_members;
+create policy "members can view their account roster" on public.account_members
+  for select using (public.is_account_member(account_id));
+-- Invites (inserts) happen via /api/team/invite using the service role key,
+-- not directly from the client - no client-facing insert policy here.
 
 drop policy if exists "members can view their account's checks" on public.checks;
 create policy "members can view their account's checks" on public.checks
-  for select using (
-    account_id in (select account_id from public.account_members where user_id = auth.uid())
-  );
+  for select using (public.is_account_member(account_id));
 
 -- Inserts happen server-side (API route) using the signed-in user's session
 -- via the anon key + RLS, scoped to an account the user actually belongs to.
 drop policy if exists "members can insert checks for their account" on public.checks;
 create policy "members can insert checks for their account" on public.checks
   for insert with check (
-    account_id in (select account_id from public.account_members where user_id = auth.uid())
-    and user_id = auth.uid()
+    public.is_account_member(account_id) and user_id = auth.uid()
   );
 
 -- ── new user -> personal account bootstrap ─────────────────────────────
