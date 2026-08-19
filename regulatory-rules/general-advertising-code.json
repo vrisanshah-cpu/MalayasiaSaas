@@ -1,0 +1,27 @@
+{
+  "applies_to": "all_categories",
+  "label": "General Advertising Code (MCMC / cross-category principles)",
+  "source": {
+    "title": "[PLACEHOLDER — replace with the real source document title, e.g. 'Malaysian Communications and Multimedia Content Code (MCMC)' relevant advertising sections]",
+    "citation": "[PLACEHOLDER — edition/version, clause numbers, effective date]",
+    "last_reviewed_by": "[PLACEHOLDER — name of the domain expert / regulatory reviewer who last checked this file, + date]"
+  },
+  "principles": [
+    {
+      "principle": "[PLACEHOLDER — example: 'Advertising must not be misleading as to the nature, characteristics, or effect of a product']",
+      "regulation_reference": "[PLACEHOLDER]"
+    },
+    {
+      "principle": "[PLACEHOLDER — example: 'Claims of superiority or comparative claims must be capable of substantiation']",
+      "regulation_reference": "[PLACEHOLDER]"
+    },
+    {
+      "principle": "[PLACEHOLDER — example: 'Testimonials must reflect genuine, current opinions and not imply guaranteed results']",
+      "regulation_reference": "[PLACEHOLDER]"
+    },
+    {
+      "principle": "[PLACEHOLDER — example: 'Absolute/superlative claims (e.g. \"the best\", \"100% guaranteed\", \"no side effects\") require caution and substantiation']",
+      "regulation_reference": "[PLACEHOLDER]"
+    }
+  ]
+}

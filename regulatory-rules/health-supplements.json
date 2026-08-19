@@ -1,0 +1,29 @@
+{
+  "category_id": "health_supplements",
+  "category_label": "Health Supplements",
+  "source": {
+    "title": "[PLACEHOLDER — replace with the real source document title, e.g. 'NPRA Guidelines for Registration of Traditional Products/Health Supplements' / Control of Drugs and Cosmetics Regulations 1984]",
+    "citation": "[PLACEHOLDER — edition/version, clause numbers, effective date]",
+    "last_reviewed_by": "[PLACEHOLDER — name of the domain expert / regulatory reviewer who last checked this file, + date]"
+  },
+  "permitted_claims": [
+    {
+      "claim": "[PLACEHOLDER — example: 'supports general wellbeing', 'traditionally used to support digestion' where registered wording matches]",
+      "notes": "[PLACEHOLDER — conditions, e.g. must match the exact wording approved on the product's NPRA registration]"
+    }
+  ],
+  "prohibited_claims": [
+    {
+      "claim": "[PLACEHOLDER — example: 'cures cancer', 'replaces prescribed medication', 'treats diabetes/hypertension']",
+      "reason": "[PLACEHOLDER — why this is an unregistered therapeutic/drug claim not permitted for a supplement]",
+      "regulation_reference": "[PLACEHOLDER — specific clause/section citation]"
+    }
+  ],
+  "restricted_or_conditional_claims": [
+    {
+      "claim": "[PLACEHOLDER — example: claims referencing clinical studies or percentages of efficacy]",
+      "condition": "[PLACEHOLDER — e.g. only permitted if claim matches the product's approved NPRA registration label exactly]",
+      "regulation_reference": "[PLACEHOLDER]"
+    }
+  ]
+}

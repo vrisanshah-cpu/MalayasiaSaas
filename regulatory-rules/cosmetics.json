@@ -1,0 +1,29 @@
+{
+  "category_id": "cosmetics",
+  "category_label": "Cosmetics",
+  "source": {
+    "title": "[PLACEHOLDER — replace with the real source document title, e.g. 'NPRA Guidelines for Control of Cosmetic Products in Malaysia' / 'Sale of Drugs Act 1952 (Cosmetic provisions)']",
+    "citation": "[PLACEHOLDER — edition/version, clause numbers, effective date]",
+    "last_reviewed_by": "[PLACEHOLDER — name of the domain expert / regulatory reviewer who last checked this file, + date]"
+  },
+  "permitted_claims": [
+    {
+      "claim": "[PLACEHOLDER — example: 'moisturises skin', 'reduces appearance of fine lines']",
+      "notes": "[PLACEHOLDER — why this is permitted, any conditions attached]"
+    }
+  ],
+  "prohibited_claims": [
+    {
+      "claim": "[PLACEHOLDER — example: 'cures eczema', 'whitens skin permanently', 'medically proven to treat acne']",
+      "reason": "[PLACEHOLDER — why this crosses from cosmetic into drug/therapeutic claim territory under Malaysian law]",
+      "regulation_reference": "[PLACEHOLDER — specific clause/section citation]"
+    }
+  ],
+  "restricted_or_conditional_claims": [
+    {
+      "claim": "[PLACEHOLDER — example: claims requiring registered clinical substantiation on file]",
+      "condition": "[PLACEHOLDER — what evidence/registration is required before this claim can be used]",
+      "regulation_reference": "[PLACEHOLDER]"
+    }
+  ]
+}

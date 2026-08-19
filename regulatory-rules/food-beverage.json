@@ -1,0 +1,29 @@
+{
+  "category_id": "food_beverage",
+  "category_label": "Food & Beverage",
+  "source": {
+    "title": "[PLACEHOLDER — replace with the real source document title, e.g. 'Food Act 1983 & Food Regulations 1985 (Malaysia)' / KKM guidelines on food advertising and health claims]",
+    "citation": "[PLACEHOLDER — edition/version, clause numbers, effective date]",
+    "last_reviewed_by": "[PLACEHOLDER — name of the domain expert / regulatory reviewer who last checked this file, + date]"
+  },
+  "permitted_claims": [
+    {
+      "claim": "[PLACEHOLDER — example: 'source of fibre', 'low in sugar' where nutrient content thresholds are actually met]",
+      "notes": "[PLACEHOLDER — conditions, e.g. must meet defined nutrient content threshold per Food Regulations Third Schedule]"
+    }
+  ],
+  "prohibited_claims": [
+    {
+      "claim": "[PLACEHOLDER — example: 'cures diabetes', 'prevents cancer', 'boosts immunity against COVID-19']",
+      "reason": "[PLACEHOLDER — why this is a prohibited disease/therapeutic claim for a food product]",
+      "regulation_reference": "[PLACEHOLDER — specific clause/section citation]"
+    }
+  ],
+  "restricted_or_conditional_claims": [
+    {
+      "claim": "[PLACEHOLDER — example: nutrient content or comparative claims like 'reduced sugar']",
+      "condition": "[PLACEHOLDER — e.g. must be accompanied by quantified comparison and meet Food Regulations thresholds]",
+      "regulation_reference": "[PLACEHOLDER]"
+    }
+  ]
+}
