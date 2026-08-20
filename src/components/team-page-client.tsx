@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, UserPlus } from "lucide-react";
+import { Check, Copy, Loader2, UserPlus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,16 +28,18 @@ export function TeamPageClient({
   const { t } = useLocale();
   const [email, setEmail] = useState("");
   const [sending, setSending] = useState(false);
-  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(
-    null
-  );
+  const [error, setError] = useState<string | null>(null);
+  const [inviteLink, setInviteLink] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   async function handleInvite(e: React.FormEvent) {
     e.preventDefault();
     if (!email.trim() || sending) return;
 
     setSending(true);
-    setMessage(null);
+    setError(null);
+    setInviteLink(null);
+    setCopied(false);
 
     try {
       const res = await fetch("/api/team/invite", {
@@ -45,14 +47,21 @@ export function TeamPageClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-      if (!res.ok) throw new Error();
-      setMessage({ type: "success", text: t.team.inviteSuccess });
+      const data = await res.json();
+      if (!res.ok || !data.inviteLink) throw new Error();
+      setInviteLink(data.inviteLink);
       setEmail("");
     } catch {
-      setMessage({ type: "error", text: t.team.inviteErrorGeneric });
+      setError(t.team.inviteErrorGeneric);
     } finally {
       setSending(false);
     }
+  }
+
+  async function copyLink() {
+    if (!inviteLink) return;
+    await navigator.clipboard.writeText(inviteLink);
+    setCopied(true);
   }
 
   return (
@@ -87,9 +96,30 @@ export function TeamPageClient({
                 )}
               </Button>
             </form>
-            {message && (
-              <Alert variant={message.type === "error" ? "destructive" : "default"} className="mt-4">
-                <AlertDescription>{message.text}</AlertDescription>
+            {error && (
+              <Alert variant="destructive" className="mt-4">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            {inviteLink && (
+              <Alert className="mt-4">
+                <AlertDescription className="flex flex-col gap-2">
+                  <span>{t.team.inviteLinkGenerated}</span>
+                  <div className="flex items-center gap-2">
+                    <Input readOnly value={inviteLink} className="text-xs" />
+                    <Button type="button" variant="outline" size="sm" onClick={copyLink}>
+                      {copied ? (
+                        <>
+                          <Check /> {t.team.linkCopied}
+                        </>
+                      ) : (
+                        <>
+                          <Copy /> {t.team.copyLink}
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </AlertDescription>
               </Alert>
             )}
           </CardContent>

@@ -31,15 +31,29 @@ export async function POST(request: Request) {
 
   try {
     const admin = createAdminClient();
-    const { error } = await admin.auth.admin.inviteUserByEmail(parsed.data.email, {
-      data: { invited_account_id: account.accountId },
-      redirectTo: `${origin}/auth/confirm?next=/dashboard`,
+    // generateLink (rather than inviteUserByEmail) creates the invited user
+    // and returns the link without Supabase sending anything itself - its
+    // outbound email sender has a strict rate limit on the free plan that
+    // team invites kept hitting. The owner copies this link and sends it
+    // however they want instead. We build our own /auth/confirm link from
+    // the hashed_token rather than using the returned action_link, since
+    // that one points at Supabase's own domain and redirects with a
+    // fragment-based session instead of going through our token_hash-based
+    // confirm route.
+    const { data, error } = await admin.auth.admin.generateLink({
+      type: "invite",
+      email: parsed.data.email,
+      options: {
+        data: { invited_account_id: account.accountId },
+        redirectTo: `${origin}/auth/confirm?next=/dashboard`,
+      },
     });
-    if (error) {
+    if (error || !data.properties) {
       console.error("Invite failed:", error);
       return errorResponse("invite_failed", 502);
     }
-    return NextResponse.json({ ok: true });
+    const inviteLink = `${origin}/auth/confirm?token_hash=${data.properties.hashed_token}&type=invite&next=/dashboard`;
+    return NextResponse.json({ ok: true, inviteLink });
   } catch (err) {
     console.error(err);
     return errorResponse("invite_failed", 500);

@@ -53,15 +53,18 @@ export function BillingPageClient({
             {tier === "pro" ? t.billing.proDescription : t.billing.freeDescription(freeLimit)}
           </p>
           {isOwner && tier === "free" && (
-            <Button onClick={handleUpgrade} disabled={redirecting} className="w-fit">
-              {redirecting ? (
-                <>
-                  <Loader2 className="animate-spin" /> {t.billing.upgrading}
-                </>
-              ) : (
-                t.billing.upgradeButton
-              )}
-            </Button>
+            <div className="flex flex-col gap-2">
+              <Button onClick={handleUpgrade} disabled={redirecting} className="w-fit">
+                {redirecting ? (
+                  <>
+                    <Loader2 className="animate-spin" /> {t.billing.upgrading}
+                  </>
+                ) : (
+                  t.billing.upgradeButton
+                )}
+              </Button>
+              <p className="text-muted-foreground text-xs">{t.billing.trialNote}</p>
+            </div>
           )}
         </CardContent>
       </Card>

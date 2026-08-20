@@ -16,5 +16,11 @@ export function createAdminClient() {
   }
   return createSupabaseClient(url, serviceRoleKey, {
     auth: { autoRefreshToken: false, persistSession: false },
+    // See the matching comment in supabase/server.ts - Next.js caches
+    // fetch() by default, which can leak one request's response to
+    // another's if not disabled here too.
+    global: {
+      fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }),
+    },
   });
 }

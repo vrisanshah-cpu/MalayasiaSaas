@@ -75,7 +75,9 @@ export interface Messages {
     inviteEmailPlaceholder: string;
     inviteButton: string;
     inviting: string;
-    inviteSuccess: string;
+    inviteLinkGenerated: string;
+    copyLink: string;
+    linkCopied: string;
     inviteErrorGeneric: string;
     membersTitle: string;
     ownerOnlyNotice: string;
@@ -88,6 +90,7 @@ export interface Messages {
     freeDescription: (limit: number) => string;
     proDescription: string;
     upgradeButton: string;
+    trialNote: string;
     manageButton: string;
     upgrading: string;
     quotaExceeded: string;

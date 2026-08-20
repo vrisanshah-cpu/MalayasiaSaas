@@ -28,9 +28,14 @@ export async function POST(request: Request) {
     // created one on a prior (possibly abandoned) checkout attempt.
     const { data: existing } = await admin
       .from("accounts")
-      .select("stripe_customer_id")
+      .select("stripe_customer_id, stripe_subscription_id")
       .eq("id", account.accountId)
       .single();
+
+    // Only first-time subscribers get the trial - an account that already
+    // had a subscription (even a cancelled one) checking out again is a
+    // resubscribe, not a new trial.
+    const isFirstSubscription = !existing?.stripe_subscription_id;
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
@@ -38,7 +43,10 @@ export async function POST(request: Request) {
       customer: existing?.stripe_customer_id ?? undefined,
       customer_email: existing?.stripe_customer_id ? undefined : account.email ?? undefined,
       client_reference_id: account.accountId,
-      subscription_data: { metadata: { account_id: account.accountId } },
+      subscription_data: {
+        metadata: { account_id: account.accountId },
+        ...(isFirstSubscription ? { trial_period_days: 14 } : {}),
+      },
       success_url: `${origin}/dashboard/billing?checkout=success`,
       cancel_url: `${origin}/dashboard/billing?checkout=cancelled`,
     });

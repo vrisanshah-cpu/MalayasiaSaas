@@ -14,6 +14,16 @@ export async function createClient() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
+      // Next.js patches the global fetch() to cache responses by default,
+      // including ones made internally by the Supabase SDK - without this,
+      // the first signed-in user's account/session data gets cached and
+      // served to every other user hitting the same Supabase REST/auth
+      // endpoint (Next's default fetch cache key doesn't vary by
+      // Authorization header). Caught live: a second user's session showed
+      // the first user's account in the UI.
+      global: {
+        fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }),
+      },
       cookies: {
         getAll() {
           return cookieStore.getAll();
