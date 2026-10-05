@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import {
   ArrowRight,
   Clock,
@@ -14,6 +13,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { ComplianceChecker } from "@/components/compliance-checker";
+import { LiveScan } from "@/components/live-scan";
 import { useLocale } from "@/lib/i18n/locale-context";
 
 // Real prohibited terms pulled from the loaded rule files, kept short so each
@@ -52,43 +52,47 @@ export function LandingPage({
           className="pointer-events-none absolute -top-40 left-1/2 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full opacity-20 blur-3xl sm:h-[42rem] sm:w-[42rem]"
           style={{ background: "radial-gradient(circle, var(--primary), transparent 70%)" }}
         />
-        <div className="relative mx-auto w-full max-w-5xl px-4 pb-16 pt-6 sm:pb-24">
+        <div className="relative mx-auto w-full max-w-6xl px-4 pb-16 pt-6 sm:pb-20">
           {header}
-          <div className="mt-14 sm:mt-20">
-            <span className="inline-flex items-center gap-2 rounded-full border border-background/20 bg-background/10 px-3 py-1 text-xs font-medium tracking-wide backdrop-blur">
-              <ShieldAlert className="size-3.5" />
-              {l.badge}
-            </span>
-            <h1 className="mt-6 max-w-3xl text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
-              {l.heroTitle}
-            </h1>
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-background/70 sm:text-lg">
-              {l.heroSubtitle}
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Button
-                size="lg"
-                className="h-11 px-5 text-base"
-                render={<a href="#checker" />}
-                nativeButton={false}
-              >
-                {l.heroCta}
-                <ArrowRight />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="h-11 border-background/25 bg-transparent px-5 text-base text-background hover:bg-background/10 hover:text-background"
-                render={<a href="#banned" />}
-                nativeButton={false}
-              >
-                {l.heroCtaSecondary}
-              </Button>
+          <div className="mt-12 grid items-center gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-14 sm:mt-16">
+            <div>
+              <span className="inline-flex items-center gap-2 rounded-full border border-background/20 bg-background/10 px-3 py-1 text-xs font-medium tracking-wide backdrop-blur">
+                <ShieldAlert className="size-3.5" />
+                {l.badge}
+              </span>
+              <h1 className="mt-6 text-4xl font-bold leading-[1.03] tracking-tight sm:text-5xl lg:text-6xl">
+                {l.heroTitle}
+              </h1>
+              <p className="mt-5 max-w-xl text-base leading-relaxed text-background/70 sm:text-lg">
+                {l.heroSubtitle}
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <Button
+                  size="lg"
+                  className="h-11 px-5 text-base"
+                  render={<a href="#checker" />}
+                  nativeButton={false}
+                >
+                  {l.heroCta}
+                  <ArrowRight />
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="h-11 border-background/25 bg-transparent px-5 text-base text-background hover:bg-background/10 hover:text-background"
+                  render={<a href="#banned" />}
+                  nativeButton={false}
+                >
+                  {l.heroCtaSecondary}
+                </Button>
+              </div>
+              <p className="mt-4 text-sm text-background/50">{l.heroNote}</p>
             </div>
-            <p className="mt-4 text-sm text-background/50">{l.heroNote}</p>
+
+            <LiveScan />
           </div>
 
-          <dl className="mt-12 grid grid-cols-2 gap-6 border-t border-background/15 pt-8 sm:grid-cols-4">
+          <dl className="mt-14 grid grid-cols-2 gap-6 border-t border-background/15 pt-8 sm:grid-cols-4">
             <Stat value={String(ruleCount)} label={l.statsRules} />
             <Stat value="3" label={l.statsCategories} />
             <Stat value="4" label={l.statsLanguages} />
