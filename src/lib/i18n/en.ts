@@ -94,6 +94,51 @@ const en: Messages = {
     quotaExceeded:
       "Your team has used its free monthly checks. Upgrade to Pro for unlimited checks.",
   },
+  landing: {
+    badge: "Built on Malaysian law, not guesswork",
+    heroTitle: "Your ad copy is one banned word away from a fine.",
+    heroSubtitle:
+      "AdCheck MY screens your Shopee listing, TikTok caption, or WhatsApp broadcast against Malaysian advertising rules before you publish — and rewrites the risky parts for you.",
+    heroCta: "Check my ad copy — free",
+    heroCtaSecondary: "See what gets flagged",
+    heroNote: "No sign-up to try. English, Bahasa Melayu, Chinese, Tamil and Manglish all work.",
+    statsRules: "sourced rules",
+    statsCategories: "product categories",
+    statsLanguages: "languages",
+    statsTime: "to a verdict",
+
+    bannedTitle: "Words Malaysian sellers use every day — that are actually banned",
+    bannedSubtitle:
+      "These are not style advice. Malaysia's Medicines Advertising Board publishes an actual banned-word list (Appendix 7): anti-aging, guaranteed, miracle, no side effects, No. 1, and any unverified percentage.",
+    bannedNote:
+      "The regulator's list is explicitly not final — it says so itself (\"senarai di atas tidak muktamad\"). That's why this is a screening tool, not a checklist.",
+    evidenceTitle: "Enforcement is rising, fast",
+    evidenceBody:
+      "MCMC complaints about unauthorised online ads went from 8 in 2022 to 3,312 in 2024, with 2,033 ads removed by August 2025.",
+
+    howTitle: "Three steps, about ten seconds",
+    howStep1Title: "Paste your copy",
+    howStep1Body:
+      "Any language, any platform — Shopee, Lazada, TikTok Shop, Instagram, or a WhatsApp broadcast.",
+    howStep2Title: "Pick a category",
+    howStep2Body:
+      "Cosmetics, food & beverage, or health supplements. Each carries a different rulebook.",
+    howStep3Title: "Fix before you publish",
+    howStep3Body:
+      "Get a risk score, the exact phrases that break a rule, a citation for each, and a compliant rewrite.",
+
+    whoTitle: "Built for Malaysian online sellers",
+    whoBody:
+      "If you sell on Shopee, Lazada or TikTok Shop, run a beauty or supplement brand, or send marketing broadcasts on WhatsApp, the rules apply to you — whether or not you've heard of them.",
+
+    ctaTitle: "Check your next ad in ten seconds",
+    ctaBody: "Free to try. No account, no card, no sales call.",
+    ctaButton: "Check my ad copy",
+
+    disclaimerTitle: "What this is — and what it isn't",
+    disclaimerBody:
+      "AdCheck MY is an advisory screening tool. It flags likely issues and points you at the underlying rule; it is not legal advice and does not replace review by qualified regulatory or legal counsel. For borderline claims, confirm with a professional before publishing.",
+  },
 };
 
 export default en;

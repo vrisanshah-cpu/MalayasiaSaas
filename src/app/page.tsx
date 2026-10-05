@@ -1,11 +1,11 @@
-import { ComplianceChecker } from "@/components/compliance-checker";
 import { SiteHeader } from "@/components/site-header";
+import { LandingPage } from "@/components/landing-page";
+import { RULE_COUNT } from "@/lib/regulatory-rules";
 
 export default function Home() {
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-8 px-4 py-12">
-      <SiteHeader showTagline />
-      <ComplianceChecker />
+    <div className="flex min-h-full flex-col">
+      <LandingPage ruleCount={RULE_COUNT} header={<SiteHeader onDark />} />
     </div>
   );
 }

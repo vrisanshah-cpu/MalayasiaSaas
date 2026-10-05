@@ -16,13 +16,16 @@ import {
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useLocale } from "@/lib/i18n/locale-context";
 import type { CurrentAccount } from "@/lib/accounts";
+import { cn } from "@/lib/utils";
 
 export function SiteHeaderClient({
   account,
   showTagline,
+  onDark = false,
 }: {
   account: CurrentAccount | null;
   showTagline: boolean;
+  onDark?: boolean;
 }) {
   const { t } = useLocale();
   const router = useRouter();
@@ -34,15 +37,29 @@ export function SiteHeaderClient({
           <ShieldCheck className="size-5" />
         </div>
         <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-semibold tracking-tight">AdCheck MY</h1>
+          <h1
+            className={cn(
+              "text-2xl font-semibold tracking-tight",
+              onDark && "text-background",
+            )}
+          >
+            AdCheck MY
+          </h1>
           {showTagline && (
-            <p className="text-muted-foreground max-w-md text-sm">{t.tagline}</p>
+            <p
+              className={cn(
+                "max-w-md text-sm",
+                onDark ? "text-background/60" : "text-muted-foreground",
+              )}
+            >
+              {t.tagline}
+            </p>
           )}
         </div>
       </Link>
 
       <div className="flex items-center gap-2">
-        <LanguageSwitcher />
+        <LanguageSwitcher onDark={onDark} />
         {account ? (
           <DropdownMenu>
             <DropdownMenuTrigger
@@ -85,6 +102,10 @@ export function SiteHeaderClient({
             render={<Link href="/login" />}
             nativeButton={false}
             variant="outline"
+            className={cn(
+              onDark &&
+                "border-background/25 bg-transparent text-background hover:bg-background/10 hover:text-background",
+            )}
           >
             {t.nav.signIn}
           </Button>

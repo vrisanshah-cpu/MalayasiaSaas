@@ -97,4 +97,35 @@ export interface Messages {
     upgrading: string;
     quotaExceeded: string;
   };
+  landing: {
+    badge: string;
+    heroTitle: string;
+    heroSubtitle: string;
+    heroCta: string;
+    heroCtaSecondary: string;
+    heroNote: string;
+    statsRules: string;
+    statsCategories: string;
+    statsLanguages: string;
+    statsTime: string;
+    bannedTitle: string;
+    bannedSubtitle: string;
+    bannedNote: string;
+    evidenceTitle: string;
+    evidenceBody: string;
+    howTitle: string;
+    howStep1Title: string;
+    howStep1Body: string;
+    howStep2Title: string;
+    howStep2Body: string;
+    howStep3Title: string;
+    howStep3Body: string;
+    whoTitle: string;
+    whoBody: string;
+    ctaTitle: string;
+    ctaBody: string;
+    ctaButton: string;
+    disclaimerTitle: string;
+    disclaimerBody: string;
+  };
 }
