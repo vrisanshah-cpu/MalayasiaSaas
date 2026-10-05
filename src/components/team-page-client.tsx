@@ -48,7 +48,14 @@ export function TeamPageClient({
         body: JSON.stringify({ email }),
       });
       const data = await res.json();
-      if (!res.ok || !data.inviteLink) throw new Error();
+      if (!res.ok || !data.inviteLink) {
+        setError(
+          data?.errorCode === "seat_limit"
+            ? t.team.inviteErrorSeatLimit
+            : t.team.inviteErrorGeneric,
+        );
+        return;
+      }
       setInviteLink(data.inviteLink);
       setEmail("");
     } catch {

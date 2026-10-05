@@ -1,27 +1,21 @@
 {
   "applies_to": "all_categories",
-  "label": "General Advertising Code (MCMC / cross-category principles)",
+  "label": "General advertising law (applies to every category)",
   "source": {
-    "title": "[PLACEHOLDER — replace with the real source document title, e.g. 'Malaysian Communications and Multimedia Content Code (MCMC)' relevant advertising sections]",
-    "citation": "[PLACEHOLDER — edition/version, clause numbers, effective date]",
-    "last_reviewed_by": "[PLACEHOLDER — name of the domain expert / regulatory reviewer who last checked this file, + date]"
+    "title": "Consumer Protection Act 1999 (Act 599, incl. 2019 amendments) Parts II and IV; Food Act 1983 s.17; MAB Guideline Part 4 general principles",
+    "citation": "CPA 1999 ss.9, 10, 18, 25, 26, 27; Food Act 1983 s.17; MAB Guideline §4.1-4.11",
+    "last_reviewed_by": "PENDING EXPERT REVIEW - transcribed from the statute text by an AI assistant on 2026-09-20; not yet reviewed by a qualified Malaysian legal professional. NOT YET LOADED: the MCMC Content Code (Malaysian Communications and Multimedia Content Code) advertising provisions - source text still to be supplied."
   },
+  "references": [
+    { "label": "Consumer Protection Act 1999 (Act 599) incl. 2019 amendment (text)", "url": "https://www.aseanconsumer.org/file/pdf_file/CONSUMER%20PROTECTION%20ACT%201999%20AMENDMENT%202019%20.pdf" },
+    { "label": "Consumer Protection Act 1999 (Act 599) - KPDN", "url": "https://mysafe.kpdn.gov.my/img/portal/consumer-safety/akta_perlindunganpengguna1999.pdf" }
+  ],
   "principles": [
-    {
-      "principle": "[PLACEHOLDER — example: 'Advertising must not be misleading as to the nature, characteristics, or effect of a product']",
-      "regulation_reference": "[PLACEHOLDER]"
-    },
-    {
-      "principle": "[PLACEHOLDER — example: 'Claims of superiority or comparative claims must be capable of substantiation']",
-      "regulation_reference": "[PLACEHOLDER]"
-    },
-    {
-      "principle": "[PLACEHOLDER — example: 'Testimonials must reflect genuine, current opinions and not imply guaranteed results']",
-      "regulation_reference": "[PLACEHOLDER]"
-    },
-    {
-      "principle": "[PLACEHOLDER — example: 'Absolute/superlative claims (e.g. \"the best\", \"100% guaranteed\", \"no side effects\") require caution and substantiation']",
-      "regulation_reference": "[PLACEHOLDER]"
-    }
+    { "principle": "Advertising must not be misleading or deceptive, or likely to mislead or deceive the public, about the nature, manufacturing process, characteristics, suitability for a purpose, availability or quantity of goods.", "regulation_reference": "Consumer Protection Act 1999 s.9(a)" },
+    { "principle": "No false or misleading representation that goods are of a particular kind, standard, quality, grade, quantity or composition, or that goods or services have any sponsorship, approval, endorsement, performance characteristics, uses or benefits. Falsely claiming a person has sponsorship, approval, endorsement or affiliation (e.g. 'approved by KKM' without approval) is also prohibited.", "regulation_reference": "Consumer Protection Act 1999 s.10(1)(a), (h), (i)" },
+    { "principle": "Representations made in an advertisement are deemed made by the person who claims to supply the goods, and/or the person on whose behalf the advertisement is made - a brand is presumed responsible for what its agency, distributor or influencer publishes for it, unless the contrary is proved.", "regulation_reference": "Consumer Protection Act 1999 s.18" },
+    { "principle": "Penalty exposure: a body corporate can be fined up to RM250,000 (RM500,000 for a second or subsequent offence); an individual up to RM100,000 or 3 years' imprisonment or both (up to RM250,000 or 6 years for repeat offences); plus up to RM1,000 for each day an offence continues after conviction.", "regulation_reference": "Consumer Protection Act 1999 s.25(1)-(2)" },
+    { "principle": "All claims about objectively verifiable facts must be capable of substantiation; do not exploit the public's lack of knowledge with data they cannot verify. Absolute statements such as 'guaranteed', '100%' or 'no side effects' are high-risk unless substantiated or expressly permitted.", "regulation_reference": "MAB Guideline §4.10, Appendix 3; Food Regulations 1985 reg 18(6)(c); NPRA Cosmetic Claims Guideline 'Other claims' (iv)" },
+    { "principle": "Food advertisements must carry the advertiser's true name and address (except oral or light/sound advertisements).", "regulation_reference": "Food Act 1983 s.17(2)-(3)" }
   ]
 }

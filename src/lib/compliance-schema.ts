@@ -1,9 +1,14 @@
 import { z } from "zod";
 
+export const SEVERITIES = ["critical", "high", "medium", "low"] as const;
+export type Severity = (typeof SEVERITIES)[number];
+
 export const flaggedPhraseSchema = z.object({
   phrase: z.string(),
   reason: z.string(),
   regulation_reference: z.string(),
+  // Older saved checks (before severity existed) have no severity; treat as medium.
+  severity: z.enum(SEVERITIES).default("medium"),
 });
 
 export const complianceResultSchema = z.object({

@@ -2,28 +2,42 @@
   "category_id": "food_beverage",
   "category_label": "Food & Beverage",
   "source": {
-    "title": "[PLACEHOLDER — replace with the real source document title, e.g. 'Food Act 1983 & Food Regulations 1985 (Malaysia)' / KKM guidelines on food advertising and health claims]",
-    "citation": "[PLACEHOLDER — edition/version, clause numbers, effective date]",
-    "last_reviewed_by": "[PLACEHOLDER — name of the domain expert / regulatory reviewer who last checked this file, + date]"
+    "title": "Food Act 1983 (Act 281) ss.16-17; Food Regulations 1985 regs 18, 18A, 18C, 18D, 18E (label claims - also applied by the enforcing authority to advertisements via Food Act s.17)",
+    "citation": "Food Act 1983 ss.16, 17; Food Regulations 1985 reg 18(1A), 18(2), 18(3), 18(4), 18(6), 18(7), 18(8), 18A, 18C, 18D, 18E",
+    "last_reviewed_by": "PENDING EXPERT REVIEW - transcribed from the statute / regulation text by an AI assistant on 2026-09-20; not yet reviewed by a qualified Malaysian food-law professional. The numeric nutrient-content thresholds (Fifth A Schedule, Tables I and II) are NOT yet loaded - claims that depend on them are flagged as 'needs threshold check'."
   },
+  "references": [
+    { "label": "Food Act 1983 (Act 281) - Laws of Malaysia (AGC)", "url": "https://lom.agc.gov.my/ilims/upload/portal/akta/outputaktap/2849945_BI/Act%20281%20(Online%202026).pdf" },
+    { "label": "Food Regulations 1985 (P.U.(A) 437/85)", "url": "https://www.foodipedia.my/food-regulations-1985.pdf" }
+  ],
   "permitted_claims": [
-    {
-      "claim": "[PLACEHOLDER — example: 'source of fibre', 'low in sugar' where nutrient content thresholds are actually met]",
-      "notes": "[PLACEHOLDER — conditions, e.g. must meet defined nutrient content threshold per Food Regulations Third Schedule]"
-    }
+    { "claim": "Nutrient function claims that use ONLY the wording listed in reg 18E(4) (e.g. 'Calcium aids in the development of strong bones and teeth', 'Protein helps build and repair body tissues', 'Iron is a factor in red blood cell formation', 'Vitamin D helps the body utilise calcium and phosphorus', 'Vitamin C enhances absorption of iron from non-meat sources', 'Zinc is essential for growth')", "notes": "Food Regulations 1985 reg 18E(4). Allowed only if the food contains at least a 'source' amount of that nutrient per reference amount (reg 18E(3)); other nutrient function claims need the Director's prior written approval (reg 18E(5))." },
+    { "claim": "Nutrient content claims (e.g. low / free / source / high) that meet the conditions in Tables I and II of the Fifth A Schedule", "notes": "Food Regulations 1985 reg 18C(2). This tool cannot verify the numeric threshold - treat as 'needs threshold check'." },
+    { "claim": "Nutrient comparative claims ('reduced', 'less than', 'fewer', 'increased', 'more than', 'light', 'extra') that name the reference food, state the amount of difference and show at least a 25% relative difference (10% of NRV for micronutrients)", "notes": "Food Regulations 1985 reg 18D." },
+    { "claim": "Claims that highlight the ABSENCE of a substance (e.g. 'no added preservatives') where the claim is not misleading, the substance is one consumers would normally expect in the food, and it has not been replaced by another substance giving equivalent characteristics (unless clearly stated)", "notes": "Food Regulations 1985 reg 18A(1). Absence of nutrients is treated as a nutrition claim under reg 18B/18C." },
+    { "claim": "Recipe / serving-suggestion pictures where not misleading and marked 'RECIPE' or 'SERVING SUGGESTION'", "notes": "Food Regulations 1985 reg 18(5)." }
   ],
   "prohibited_claims": [
-    {
-      "claim": "[PLACEHOLDER — example: 'cures diabetes', 'prevents cancer', 'boosts immunity against COVID-19']",
-      "reason": "[PLACEHOLDER — why this is a prohibited disease/therapeutic claim for a food product]",
-      "regulation_reference": "[PLACEHOLDER — specific clause/section citation]"
-    }
+    { "claim": "Any claim that a food prevents, alleviates, treats or cures a disease, disorder or physiological condition (e.g. 'lowers blood pressure', 'cures diabetes', 'fights cancer')", "reason": "Claims about suitability of a food for prevention, alleviation, treatment or cure of a disease, disorder or particular physiological condition are forbidden except where the Regulations expressly permit.", "regulation_reference": "Food Regulations 1985 reg 18(6)(d); reg 18E(2)" },
+    { "claim": "Claims that cannot be substantiated", "reason": "No label / description of food may carry a claim that cannot be substantiated. Advertisements that are likely to deceive as to character, nature, value, quality, merit or effects are an offence.", "regulation_reference": "Food Regulations 1985 reg 18(6)(c); Food Act 1983 s.17(1)(d)" },
+    { "claim": "The words 'health', 'tonic', 'medicated', 'compounded' (or words of the same significance) describing a food", "reason": "Forbidden on labels describing food, except as otherwise provided in the Regulations.", "regulation_reference": "Food Regulations 1985 reg 18(3)" },
+    { "claim": "Grading, quality or superiority words ('best quality', 'premium grade', 'grade A', 'superior', 'finest') unless the grading conforms to that established by the relevant authority", "reason": "Words indicating grading, quality or superiority may not appear unless they match official grading.", "regulation_reference": "Food Regulations 1985 reg 18(1A)" },
+    { "claim": "'Pure' (or equivalent) unless the food meets the prescribed strength/purity/quality and has no added substances beyond those essential to processing", "reason": "Reg 18(2) restricts 'pure'.", "regulation_reference": "Food Regulations 1985 reg 18(2)" },
+    { "claim": "'Organic', 'biological', 'ecological', 'biodynamic' unless the food conforms to MS 1529", "reason": "Restricted terms - must comply with Malaysian Standard MS 1529 (plant-based organically produced foods).", "regulation_reference": "Food Regulations 1985 reg 18(7)" },
+    { "claim": "'Nutritious' unless the food has a range of nutrients (carbohydrate, fat, protein, vitamins, minerals), > 40 kcal per 100 g (or 20 kcal per 100 ml), at least 5 g protein per 100 g (2.5 g per 100 ml), at least four vitamins and two minerals at 'source' level, and these amounts are declared", "reason": "'Nutritious' has strict eligibility criteria.", "regulation_reference": "Food Regulations 1985 reg 18(8)" },
+    { "claim": "Claiming a food provides an adequate source of ALL essential nutrients, or implying a balanced diet cannot supply adequate nutrients", "reason": "Forbidden claim types.", "regulation_reference": "Food Regulations 1985 reg 18(6)(a)-(b)" },
+    { "claim": "Statements that raise doubt about the safety of similar foods, or that arouse or exploit fear in the consumer", "reason": "Fear-based or safety-disparaging claims are forbidden.", "regulation_reference": "Food Regulations 1985 reg 18(6)(e)" },
+    { "claim": "Claiming absence of beef, pork or its derivatives, lard or added alcohol when the food does not contain such ingredients; or claiming absence of a prohibited additive/nutrient supplement", "reason": "Absence claims that make an ordinary food look special are forbidden.", "regulation_reference": "Food Regulations 1985 reg 18(4)" },
+    { "claim": "Nutrient function claims (e.g. 'Vitamin C boosts immunity', 'Omega-3 for smart kids') that are NOT in the reg 18E(4) list, or that imply a nutrient cures, treats or protects from a disease", "reason": "Only the listed nutrient function claims are permitted, otherwise the Director's prior written approval is required.", "regulation_reference": "Food Regulations 1985 reg 18E(2), 18E(4), 18E(5)" },
+    { "claim": "Nutrient function claim on a food that does not reach at least a 'source' level of that nutrient", "reason": "Function claims require the food to contain the nutrient at source level per reference amount.", "regulation_reference": "Food Regulations 1985 reg 18E(3)" },
+    { "claim": "Comparative claims ('30% less sugar', 'lighter', 'reduced fat') without stating the reference food and the amount of difference, or with under 25% difference", "reason": "Comparative claims must identify the compared food, quantify the difference and meet the 25% (10% NRV for micronutrients) rule.", "regulation_reference": "Food Regulations 1985 reg 18D(3)" },
+    { "claim": "Labelling a food false, misleading or deceptive as to character, nature, value, substance, quality, composition, merit, safety, strength, purity, weight, origin, age or proportion", "reason": "Offence under the Food Act: up to 3 years' imprisonment or a fine or both.", "regulation_reference": "Food Act 1983 s.16" },
+    { "claim": "Advertisements likely to deceive a purchaser about the character, nature, value, substance, quality, strength, purity, composition, merit, safety, weight, proportion, origin, age or effects of a food or ingredient", "reason": "Offence under the Food Act: up to 3 years' imprisonment or a fine or both.", "regulation_reference": "Food Act 1983 s.17(1)(d)" }
   ],
   "restricted_or_conditional_claims": [
-    {
-      "claim": "[PLACEHOLDER — example: nutrient content or comparative claims like 'reduced sugar']",
-      "condition": "[PLACEHOLDER — e.g. must be accompanied by quantified comparison and meet Food Regulations thresholds]",
-      "regulation_reference": "[PLACEHOLDER]"
-    }
+    { "claim": "Nutrient content claims: low sugar, low fat, sugar-free, fat-free, high protein, high fibre, source of fibre, low sodium, low calorie", "condition": "Allowed only when the food meets the conditions for that specific claim in Fifth A Schedule Tables I and II. Where a food is naturally low/free of the nutrient, the wording must be 'a low (nutrient) food' / 'a (nutrient)-free food'. Numeric thresholds are not loaded in this tool - always confirm against the Schedule.", "regulation_reference": "Food Regulations 1985 reg 18C(2), 18C(3)" },
+    { "claim": "'Special purpose food', 'diabetic-friendly', 'for weight control'-style presentations", "condition": "A food may not be advertised or sold as a special purpose food other than those prescribed (regs 389-393) without the Director's prior written approval, and the label must support its special suitability. A special purpose food that contains carbohydrate may not be labelled 'sugarless' or 'sugar free'.", "regulation_reference": "Food Regulations 1985 reg 388(3)-(5)" },
+    { "claim": "Advertiser identification", "condition": "Advertisements must state the true name of the person publishing them and the address of their place of business or residence (a registered office address suffices for companies). This does not apply to advertisements published orally or by light/sound transmission.", "regulation_reference": "Food Act 1983 s.17(2), s.17(3)(a)" },
+    { "claim": "Penalty exposure", "condition": "Contravening Food Act ss.16 or 17: imprisonment up to 3 years, or a fine, or both (the Act text sets no fixed maximum fine for these sections); contravening a provision of the Food Regulations is separately punishable.", "regulation_reference": "Food Act 1983 ss.16, 17" }
   ]
 }

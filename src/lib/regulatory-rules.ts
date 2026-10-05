@@ -12,6 +12,8 @@ import foodBeverageData from "../../regulatory-rules/food-beverage.json";
 import healthSupplementsData from "../../regulatory-rules/health-supplements.json";
 import generalAdvertisingCodeData from "../../regulatory-rules/general-advertising-code.json";
 
+const referenceSchema = z.object({ label: z.string(), url: z.string().url() });
+
 const sourceSchema = z.object({
   title: z.string(),
   citation: z.string(),
@@ -22,6 +24,7 @@ const categoryRulesSchema = z.object({
   category_id: z.string(),
   category_label: z.string(),
   source: sourceSchema,
+  references: z.array(referenceSchema).default([]),
   permitted_claims: z.array(
     z.object({ claim: z.string(), notes: z.string() })
   ),
@@ -45,12 +48,14 @@ const generalCodeSchema = z.object({
   applies_to: z.literal("all_categories"),
   label: z.string(),
   source: sourceSchema,
+  references: z.array(referenceSchema).default([]),
   principles: z.array(
     z.object({ principle: z.string(), regulation_reference: z.string() })
   ),
 });
 
 export type CategoryRules = z.infer<typeof categoryRulesSchema>;
+export type GeneralCode = z.infer<typeof generalCodeSchema>;
 
 /**
  * Register every category file here. The dropdown on the check page and the
@@ -58,13 +63,13 @@ export type CategoryRules = z.infer<typeof categoryRulesSchema>;
  * new regulatory-rules/*.json file + an entry here is the only step needed
  * to add a category.
  */
-const CATEGORY_RULES: CategoryRules[] = [
+export const CATEGORY_RULES: CategoryRules[] = [
   categoryRulesSchema.parse(cosmeticsData),
   categoryRulesSchema.parse(foodBeverageData),
   categoryRulesSchema.parse(healthSupplementsData),
 ];
 
-const GENERAL_ADVERTISING_CODE = generalCodeSchema.parse(
+export const GENERAL_ADVERTISING_CODE = generalCodeSchema.parse(
   generalAdvertisingCodeData
 );
 
@@ -79,11 +84,23 @@ export function isCategoryId(value: string): value is CategoryId {
   return CATEGORIES.some((c) => c.id === value);
 }
 
+/** Total number of individual sourced rules loaded - shown on marketing pages. */
+export const RULE_COUNT =
+  GENERAL_ADVERTISING_CODE.principles.length +
+  CATEGORY_RULES.reduce(
+    (n, r) =>
+      n +
+      r.permitted_claims.length +
+      r.prohibited_claims.length +
+      r.restricted_or_conditional_claims.length,
+    0
+  );
+
 function formatCategoryRules(rules: CategoryRules): string {
   const lines: string[] = [];
   lines.push(`### ${rules.category_label} (category_id: "${rules.category_id}")`);
   lines.push(
-    `Source: ${rules.source.title} — ${rules.source.citation} (last reviewed by ${rules.source.last_reviewed_by})`
+    `Source: ${rules.source.title} — ${rules.source.citation}`
   );
 
   lines.push("\nPermitted claims:");

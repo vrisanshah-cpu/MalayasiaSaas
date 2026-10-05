@@ -24,6 +24,7 @@ export interface Messages {
     malformedResponse: string;
     invalidShape: string;
     checkFailed: string;
+    rateLimited: string;
     invalidRequest: string;
   };
   advisoryTitle: string;
@@ -79,6 +80,7 @@ export interface Messages {
     copyLink: string;
     linkCopied: string;
     inviteErrorGeneric: string;
+    inviteErrorSeatLimit: string;
     membersTitle: string;
     ownerOnlyNotice: string;
   };

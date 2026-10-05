@@ -1,4 +1,5 @@
 import { createClient } from "./supabase/server";
+import type { Tier } from "./plans";
 
 export interface CurrentAccount {
   userId: string;
@@ -6,13 +7,13 @@ export interface CurrentAccount {
   accountId: string;
   accountName: string;
   role: "owner" | "member";
-  tier: "free" | "pro";
+  tier: Tier;
 }
 
 interface AccountMemberRow {
   account_id: string;
   role: "owner" | "member";
-  accounts: { name: string; tier: "free" | "pro" } | null;
+  accounts: { name: string; tier: Tier } | null;
 }
 
 /**

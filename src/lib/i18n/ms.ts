@@ -21,6 +21,7 @@ const ms: Messages = {
     invalidShape:
       "Model memulangkan respons dalam bentuk yang tidak dijangka. Sila cuba lagi.",
     checkFailed: "Semakan pematuhan gagal. Sila cuba lagi.",
+    rateLimited: "Terlalu banyak semakan dari sambungan anda. Sila tunggu beberapa minit dan cuba lagi.",
     invalidRequest:
       "Sila semak salinan iklan dan kategori anda, kemudian cuba lagi.",
   },
@@ -79,6 +80,7 @@ const ms: Messages = {
     copyLink: "Salin pautan",
     linkCopied: "Disalin!",
     inviteErrorGeneric: "Gagal menjana jemputan. Sila cuba lagi.",
+    inviteErrorSeatLimit: "Semua tempat duduk pelan anda telah digunakan. Naik taraf untuk menambah ahli pasukan.",
     membersTitle: "Ahli",
     ownerOnlyNotice: "Hanya pemilik akaun boleh menjemput rakan sepasukan.",
   },

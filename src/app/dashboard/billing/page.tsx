@@ -3,8 +3,9 @@ import { redirect } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
 import { getCurrentAccount } from "@/lib/accounts";
 import { BillingPageClient } from "@/components/billing-page-client";
+import { PLANS } from "@/lib/plans";
 
-const FREE_TIER_MONTHLY_LIMIT = Number(process.env.FREE_TIER_MONTHLY_LIMIT ?? 20);
+const FREE_TIER_MONTHLY_LIMIT = PLANS.free.limits.checks;
 
 export default async function BillingPage() {
   const account = await getCurrentAccount();

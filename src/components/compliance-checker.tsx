@@ -128,11 +128,20 @@ export function ComplianceChecker() {
       });
       const data = await res.json();
       if (!res.ok) {
-        if (data.errorCode === "quota_exceeded") {
-          throw new Error(t.billing.quotaExceeded);
-        }
-        const code = (data.errorCode as keyof Messages["errors"]) ?? "checkFailed";
-        throw new Error(t.errors[code] ?? t.errors.checkFailed);
+        // The API returns snake_case codes; map them explicitly rather than
+        // casting, so a renamed code fails type-check instead of silently
+        // falling through to the generic message.
+        const byCode: Record<string, string> = {
+          missing_api_key: t.errors.missingKey,
+          empty_response: t.errors.emptyResponse,
+          malformed_response: t.errors.malformedResponse,
+          invalid_shape: t.errors.invalidShape,
+          invalid_request: t.errors.invalidRequest,
+          check_failed: t.errors.checkFailed,
+          quota_exceeded: t.billing.quotaExceeded,
+          rate_limited: t.errors.rateLimited,
+        };
+        throw new Error(byCode[data.errorCode as string] ?? t.errors.checkFailed);
       }
       setResult(data as ComplianceResult);
     } catch (err) {

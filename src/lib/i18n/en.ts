@@ -18,6 +18,7 @@ const en: Messages = {
     invalidShape:
       "The model returned a response in an unexpected shape. Please try again.",
     checkFailed: "The compliance check failed. Please try again.",
+    rateLimited: "Too many checks from your connection. Please wait a few minutes and try again.",
     invalidRequest: "Please check your ad copy and category, then try again.",
   },
   advisoryTitle:
@@ -75,6 +76,7 @@ const en: Messages = {
     copyLink: "Copy link",
     linkCopied: "Copied!",
     inviteErrorGeneric: "Couldn't generate the invite. Please try again.",
+    inviteErrorSeatLimit: "Your plan's seats are all used. Upgrade to add more teammates.",
     membersTitle: "Members",
     ownerOnlyNotice: "Only the account owner can invite teammates.",
   },

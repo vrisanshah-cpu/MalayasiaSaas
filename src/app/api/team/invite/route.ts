@@ -3,10 +3,16 @@ import { z } from "zod";
 
 import { getCurrentAccount } from "@/lib/accounts";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { PLANS } from "@/lib/plans";
 
 const requestSchema = z.object({ email: z.string().trim().email() });
 
-type ErrorCode = "unauthorized" | "forbidden" | "invalid_request" | "invite_failed";
+type ErrorCode =
+  | "unauthorized"
+  | "forbidden"
+  | "invalid_request"
+  | "seat_limit"
+  | "invite_failed";
 
 function errorResponse(code: ErrorCode, status: number) {
   return NextResponse.json({ errorCode: code }, { status });
@@ -31,6 +37,18 @@ export async function POST(request: Request) {
 
   try {
     const admin = createAdminClient();
+
+    // Seats are capped per plan; without this a free account (1 seat) could
+    // invite unlimited members.
+    const { count } = await admin
+      .from("account_members")
+      .select("user_id", { count: "exact", head: true })
+      .eq("account_id", account.accountId);
+    const seatLimit = PLANS[account.tier].limits.seats;
+    if ((count ?? 0) >= seatLimit) {
+      return errorResponse("seat_limit", 409);
+    }
+
     // generateLink (rather than inviteUserByEmail) creates the invited user
     // and returns the link without Supabase sending anything itself - its
     // outbound email sender has a strict rate limit on the free plan that
